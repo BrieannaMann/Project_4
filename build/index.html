@@ -1,23 +1,34 @@
 <html>
     <head>
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <link rel="stylesheet" href="path/to/wallop.css">
+   	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <title>Bestbuy Store</title>
     </head>
     <body>
-        <h2>Testing ES6 + Babel</h2>
-        <b>Name :</b> <span id="nameSpan"></span>
-        <div class="selection"> 
-        <button id="mainproduct" value="((categoryPath.id=abcat0502000))"> LAPTOPS </button>
-        <button value="((categoryPath.id=pcmcat209400050001))"> CELL PHONES </button>
-        <button value="((categoryPath.id=abcat0101000))"> TELEVISION </button>
-        <button value="((categoryPath.id=abcat0204000))"> HEADPHONES </button>
-        </div>
-        <div id="content"> </div>
-        <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.js"></script>
-        <script src="js/bundle.js"></script>
-        <script src="path/to/Wallop.min.js"></script>
+    <div id="cartnum">0</div>
+    	<i class="fa fa-shopping-cart fa-3x" aria-hidden="true"></i>
+        <h1>WELCOME TO BESTBUY STORE</h1>
+        <h2>SHOT HERE, FOR SOME REASON</h2> 
+        	<div class="selection"> 
+		        <button class="category" id="mainproduct" value="((categoryPath.id=abcat0502000))"> LAPTOPS </button>
+		        <button class="category" value="((categoryPath.id=pcmcat209400050001))"> CELL PHONES </button>
+		        <button class="category" value="((categoryPath.id=abcat0101000))"> TELEVISION </button>
+		        <button class="category" value="((categoryPath.id=abcat0204000))"> HEADPHONES </button>
+	</div>
+    <div id="content"> </div>
+   	<footer>
+    	<div> 
+	       	<h3>SIGN UP FOR UPDATES</h3>
+	       	<h4>WE WILL NOT STOP EMAILING YOU</h4>
+	       	<div>
+		       	<input type="text" class="email" name="email" placeholder="Your Email" />
+				<input type="submit" class="subscribe" name="subscribe" value="Subscribe" /> 
+			</div>
+       	</div>
+    </footer> 
     </body>
+    <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.js"></script>
+        <script src="js/bundle.js"></script>
 </html>
 
 

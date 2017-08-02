@@ -35,12 +35,18 @@ var carousel = exports.carousel = function carousel(data) {
 	for (var i = 0; i < data.products.length; i++) {
 		var brand = '<p  class= "brand">' + data.products[i].manufacturer;+'</p>';
 		var name = '<p  class= "price">' + data.products[i].name + '</p>';
-		var image = '<img src="' + data.products[i].thumbnailImage + '">';
-		var price = '<p  class= "price">' + data.products[i].regularPrice + '</p>';
+		var image = '<img src="' + data.products[i].largeImage + '">';
+		var displayPrice = '<p  class= "price">' + data.products[i].regularPrice + '</p>';
+		var price = data.products[i].regularPrice;
+		var sku = data.products[i].sku;
+		var addcart = '<button class="addtocart" data-sku="' + sku + '" data-price="' + price + '"> ADD TO CART </button>';
+		//creating a new div for each product 
 		var createDiv = $("<div></div>");
-		createDiv.addClass('Wallop-item');
+		createDiv.addClass('products');
+		//append content to new div 
 		$('#content').append(createDiv);
-		createDiv.append(brand + name + image + price);
+		$("#content").css("visibility", "visible");
+		createDiv.append(brand + name + image + displayPrice + addcart);
 	};
 };
 
@@ -51,13 +57,17 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*import Cart from "./cart";*/
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _bestbuy = require("./bestbuy");
 
 var _bestbuy2 = _interopRequireDefault(_bestbuy);
 
 var _carousel = require("./carousel");
+
+var _productutil = require("./productutil");
+
+var _productutil2 = _interopRequireDefault(_productutil);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -71,6 +81,7 @@ var App = function () {
 		this.url = "https://api.bestbuy.com/v1/products";
 		this.initBBCall();
 		this.eventHandle();
+		this.addtocart();
 	}
 
 	_createClass(App, [{
@@ -78,7 +89,7 @@ var App = function () {
 		value: function eventHandle() {
 			var _this = this;
 
-			$("button").on('click', function (e) {
+			$(".category").on('click', function (e) {
 				var target = e.target.value;
 				_this.url = _this.baseurl + target;
 				// console.log(this.url);
@@ -97,6 +108,12 @@ var App = function () {
 				console.log(error);
 			});
 		}
+	}, {
+		key: "addtocart",
+		value: function addtocart() {
+			var x = new _productutil2.default();
+			x.addtocart();
+		}
 	}]);
 
 	return App;
@@ -108,4 +125,46 @@ var x = new App();
 
 $('#mainproduct').click();
 
-},{"./bestbuy":1,"./carousel":2}]},{},[3]);
+},{"./bestbuy":1,"./carousel":2,"./productutil":4}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var productutil = function () {
+	function productutil() {
+		_classCallCheck(this, productutil);
+	}
+
+	_createClass(productutil, [{
+		key: 'addtocart',
+		value: function addtocart() {
+			console.log('working');
+
+			$(document).on('click', '.addtocart', function () {
+				$("#cartnum").css("visibility", "visible");
+				var cn = $("#cartnum").text();
+				$("#cartnum").text(parseInt(cn) + 1);
+				var tp = $(this).data("price");
+				var productsku = $(this).data("sku");
+
+				console.log(tp, productsku);
+			});
+
+			//              let price = $(this).data("price");
+			//              let sku = $(this).data("sku");
+			//              console.log(price, sku);
+		}
+	}]);
+
+	return productutil;
+}();
+
+exports.default = productutil;
+
+},{}]},{},[3]);

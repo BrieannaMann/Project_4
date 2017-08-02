@@ -1,10 +1,6 @@
-/*import Cart from "./cart";*/
-
-
 import request from "./bestbuy";
 import {carousel} from "./carousel";
-
-
+import productutil from "./productutil";
 
 export default class App{
 	constructor(){
@@ -12,23 +8,23 @@ export default class App{
 		this.url = "https://api.bestbuy.com/v1/products";
 		this.initBBCall();
 		this.eventHandle();
+		this.addtocart();
 	}
 	eventHandle () {
-		
-		
-		$("button").on('click', (e) => {
+		$(".category").on('click', (e) => {
 			let target = e.target.value;
 			this.url = this.baseurl + target;
 			// console.log(this.url);
 			this.initBBCall();
 		});
 	}
+
 	initBBCall () { 
 		request({url: this.url, api : "8ccddf4rtjz5k5btqam84qak" })
 		
 		.then(data => {
 			$('#content').empty();
-			(carousel(data))
+			(carousel(data));
 			/* fill carosel with products */
 		})
 		.catch(error => {
@@ -36,7 +32,14 @@ export default class App{
 			console.log(error);
 		});
 	}
+	addtocart(){
+		let x= new productutil;
+		x.addtocart();
+	}
+
 }
 let x = new App;
 
+
 $('#mainproduct').click();
+

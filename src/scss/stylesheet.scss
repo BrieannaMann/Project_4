@@ -3,18 +3,15 @@ $lt-green : #809f90;
 $md-green : #50846d;
 $drk-green : #377256;
 $drk-grey : #2d2d2d;
-
+ 
 button {
 	border: none;
 	text-decoration: none;
-	background-color: $md-green;
+	background-color: $lt-green;
 	color: white;
 }
 .selection {
-	background-color: $md-green;
-}
-h2 {
-	color: red;
+	background-color: $lt-green;
 }
 .flex {
 	display: flex;
@@ -22,6 +19,28 @@ h2 {
 .flex-center {
 	
 }
-#content img {
-	width: 20%
+#cartnum {
+  visibility: hidden; 
 }
+
+footer {
+	background-color: $drk-grey;
+}
+.email-input {
+  background: white;
+  border-radius: 100em;
+  border: .2em solid white;
+  padding-left: 2vw; }
+
+.email {
+  border-style: none; }
+
+.subscribe {
+  color: white;
+  background-color: $md-green;
+  border-style: none;
+  border-radius: 100em;
+  transition: background-color .5s ease-in; }
+
+.subscribe:hover {
+  background-color: black; }
