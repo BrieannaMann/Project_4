@@ -1,0 +1,27 @@
+$lt-lt-green : #cddad3;
+$lt-green : #809f90;
+$md-green : #50846d;
+$drk-green : #377256;
+$drk-grey : #2d2d2d;
+
+button {
+	border: none;
+	text-decoration: none;
+	background-color: $md-green;
+	color: white;
+}
+.selection {
+	background-color: $md-green;
+}
+h2 {
+	color: red;
+}
+.flex {
+	display: flex;
+}
+.flex-center {
+	
+}
+#content img {
+	width: 20%
+}
