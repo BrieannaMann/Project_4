@@ -45,7 +45,7 @@ var carousel = exports.carousel = function carousel(data) {
 		createDiv.addClass('products');
 		//append content to new div 
 		$('#content').append(createDiv);
-		$("#content").css("visibility", "visible");
+
 		createDiv.append(brand + name + image + displayPrice + addcart);
 	};
 };
@@ -82,6 +82,7 @@ var App = function () {
 		this.initBBCall();
 		this.eventHandle();
 		this.addtocart();
+		console.log(sessionStorage.length);
 	}
 
 	_createClass(App, [{
@@ -110,9 +111,16 @@ var App = function () {
 		}
 	}, {
 		key: "addtocart",
-		value: function addtocart() {
-			var x = new _productutil2.default();
-			x.addtocart();
+		value: function addtocart(item) {
+			$(document).on('click', '.addtocart', function () {
+
+				//item price & sku
+				var price = $(this).data("price");
+				var productsku = $(this).data("sku");
+				//console.log(price,  productsku);
+				var x = new _productutil2.default();
+				x.addtocart(price, productsku);
+			});
 		}
 	}]);
 
@@ -126,7 +134,7 @@ var x = new App();
 $('#mainproduct').click();
 
 },{"./bestbuy":1,"./carousel":2,"./productutil":4}],4:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -139,26 +147,47 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var productutil = function () {
 	function productutil() {
 		_classCallCheck(this, productutil);
+
+		this.addtocart();
+		this.cartnumber();
 	}
 
 	_createClass(productutil, [{
-		key: 'addtocart',
-		value: function addtocart() {
-			console.log('working');
+		key: "addtocart",
+		value: function addtocart(p, s) {
+			var item = {
+				price: p,
+				quanity: 0
+			};
+			var getSku = sessionStorage.getItem(s);
+			var cartproduct = "";
+			//if the add to cart button has NOT been clicked add price and quanity of 1
+			if (getSku == null) {
+				item.price = p;
+				item.quanity = 1;
+			}
+			//if button has been clicked add 1 to already exisiting sku
+			else {
+					cartproduct = JSON.parse(getSku);
+					item.price = cartproduct.price;
+					item.quanity = cartproduct.quanity + 1;
+				}
+			//reassign sku and stringify the item. This has to be done after the if statment
+			getSku = JSON.stringify(item);
+			//setting the passed sku and parsed getsku and setting them in sessionstorage
+			sessionStorage.setItem(s, getSku);
+			//getting new information form the new set and parsing that data
+			getSku = sessionStorage.getItem(s);
+			cartproduct = JSON.parse(getSku);
+			console.log("sku: " + s + " price: " + cartproduct.price + " quanitiy: " + cartproduct.quanity);
 
-			$(document).on('click', '.addtocart', function () {
-				$("#cartnum").css("visibility", "visible");
-				var cn = $("#cartnum").text();
-				$("#cartnum").text(parseInt(cn) + 1);
-				var tp = $(this).data("price");
-				var productsku = $(this).data("sku");
-
-				console.log(tp, productsku);
-			});
-
-			//              let price = $(this).data("price");
-			//              let sku = $(this).data("sku");
-			//              console.log(price, sku);
+			this.cartnumber();
+		}
+	}, {
+		key: "cartnumber",
+		value: function cartnumber() {
+			document.getElementById("cartnum").innerHTML = sessionStorage.length;
+			//$("cartnum").innerHTML	= sessionStorage.length;
 		}
 	}]);
 

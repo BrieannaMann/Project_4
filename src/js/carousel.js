@@ -15,7 +15,7 @@ export const carousel = (data)=>{
 					createDiv.addClass('products');
 			//append content to new div 
 				$('#content').append(createDiv);
-				$("#content").css("visibility", "visible");
+				
 			        createDiv.append( brand + name + image+ displayPrice + addcart);
 	};
 };

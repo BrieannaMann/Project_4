@@ -9,6 +9,7 @@ export default class App{
 		this.initBBCall();
 		this.eventHandle();
 		this.addtocart();
+		console.log(sessionStorage.length);
 	}
 	eventHandle () {
 		$(".category").on('click', (e) => {
@@ -32,9 +33,18 @@ export default class App{
 			console.log(error);
 		});
 	}
-	addtocart(){
-		let x= new productutil;
-		x.addtocart();
+	addtocart(item){
+		$(document).on('click', '.addtocart', function(){
+			
+			//item price & sku
+			let price = $(this).data("price");
+			let productsku = $(this).data("sku");
+				//console.log(price,  productsku);
+			let x= new productutil;
+			x.addtocart(price,  productsku);
+			
+		});
+		
 	}
 
 }
