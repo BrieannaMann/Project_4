@@ -82,7 +82,7 @@ var App = function () {
 		this.initBBCall();
 		this.eventHandle();
 		this.addtocart();
-		console.log(sessionStorage.length);
+		console.log(sessionStorage);
 	}
 
 	_createClass(App, [{
@@ -92,6 +92,7 @@ var App = function () {
 
 			$(".category").on('click', function (e) {
 				var target = e.target.value;
+				console.log(e);
 				_this.url = _this.baseurl + target;
 				// console.log(this.url);
 				_this.initBBCall();
@@ -150,6 +151,7 @@ var productutil = function () {
 
 		this.addtocart();
 		this.cartnumber();
+		this.carttotal();
 	}
 
 	_createClass(productutil, [{
@@ -160,7 +162,7 @@ var productutil = function () {
 				quanity: 0
 			};
 			var getSku = sessionStorage.getItem(s);
-			var cartproduct = "";
+			var cartproduct = null;
 			//if the add to cart button has NOT been clicked add price and quanity of 1
 			if (getSku == null) {
 				item.price = p;
@@ -169,7 +171,9 @@ var productutil = function () {
 			//if button has been clicked add 1 to already exisiting sku
 			else {
 					cartproduct = JSON.parse(getSku);
-					item.price = cartproduct.price;
+					var price = p;
+					item.price = cartproduct.price + price;
+					//item.price = cartproduct.price;
 					item.quanity = cartproduct.quanity + 1;
 				}
 			//reassign sku and stringify the item. This has to be done after the if statment
@@ -179,15 +183,23 @@ var productutil = function () {
 			//getting new information form the new set and parsing that data
 			getSku = sessionStorage.getItem(s);
 			cartproduct = JSON.parse(getSku);
-			console.log("sku: " + s + " price: " + cartproduct.price + " quanitiy: " + cartproduct.quanity);
 
+			document.getElementById("sku").innerHTML = "sku: " + s;
+			document.getElementById("quanity").innerHTML = "quanitiy: " + cartproduct.quanity;
+			document.getElementById("total-price").innerHTML = "price: " + cartproduct.price;
 			this.cartnumber();
 		}
 	}, {
 		key: "cartnumber",
 		value: function cartnumber() {
 			document.getElementById("cartnum").innerHTML = sessionStorage.length;
-			//$("cartnum").innerHTML	= sessionStorage.length;
+		}
+	}, {
+		key: "carttotal",
+		value: function carttotal() {
+			//console.log(sessionStorage.key[0])
+
+
 		}
 	}]);
 

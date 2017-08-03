@@ -9,11 +9,12 @@ export default class App{
 		this.initBBCall();
 		this.eventHandle();
 		this.addtocart();
-		console.log(sessionStorage.length);
+		console.log(sessionStorage);
 	}
 	eventHandle () {
 		$(".category").on('click', (e) => {
 			let target = e.target.value;
+			console.log(e);
 			this.url = this.baseurl + target;
 			// console.log(this.url);
 			this.initBBCall();
