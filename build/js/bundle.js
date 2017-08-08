@@ -82,7 +82,7 @@ var App = function () {
 		this.initBBCall();
 		this.eventHandle();
 		this.addtocart();
-		console.log(sessionStorage);
+		console.log(sessionStorage.length);
 	}
 
 	_createClass(App, [{
@@ -112,15 +112,19 @@ var App = function () {
 		}
 	}, {
 		key: "addtocart",
-		value: function addtocart(item) {
+		value: function addtocart() {
 			$(document).on('click', '.addtocart', function () {
+				var sku = $(this).data("sku");
+				var product = {
+					price: $(this).data("price"),
+					qty: 1
+				};
 
-				//item price & sku
-				var price = $(this).data("price");
-				var productsku = $(this).data("sku");
-				//console.log(price,  productsku);
 				var x = new _productutil2.default();
-				x.addtocart(price, productsku);
+				x.addtocart(sku, product);
+				x.updateCart(sku, product);
+				x.removecart(sku, product);
+				x.cartNum();
 			});
 		}
 	}]);
@@ -130,15 +134,16 @@ var App = function () {
 
 exports.default = App;
 
+
 var x = new App();
 
 $('#mainproduct').click();
 
 },{"./bestbuy":1,"./carousel":2,"./productutil":4}],4:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+   value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -146,64 +151,80 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var productutil = function () {
-	function productutil() {
-		_classCallCheck(this, productutil);
+   function productutil() {
+      _classCallCheck(this, productutil);
 
-		this.addtocart();
-		this.cartnumber();
-		this.carttotal();
-	}
+      this.updateCart();
+      this.removecart();
+   }
 
-	_createClass(productutil, [{
-		key: "addtocart",
-		value: function addtocart(p, s) {
-			var item = {
-				price: p,
-				quanity: 0
-			};
-			var getSku = sessionStorage.getItem(s);
-			var cartproduct = null;
-			//if the add to cart button has NOT been clicked add price and quanity of 1
-			if (getSku == null) {
-				item.price = p;
-				item.quanity = 1;
-			}
-			//if button has been clicked add 1 to already exisiting sku
-			else {
-					cartproduct = JSON.parse(getSku);
-					var price = p;
-					item.price = cartproduct.price + price;
-					//item.price = cartproduct.price;
-					item.quanity = cartproduct.quanity + 1;
-				}
-			//reassign sku and stringify the item. This has to be done after the if statment
-			getSku = JSON.stringify(item);
-			//setting the passed sku and parsed getsku and setting them in sessionstorage
-			sessionStorage.setItem(s, getSku);
-			//getting new information form the new set and parsing that data
-			getSku = sessionStorage.getItem(s);
-			cartproduct = JSON.parse(getSku);
+   _createClass(productutil, [{
+      key: 'addtocart',
+      value: function addtocart(s, p) {
+         var getSku = sessionStorage.getItem(s);
+         var cartproduct = null;
 
-			document.getElementById("sku").innerHTML = "sku: " + s;
-			document.getElementById("quanity").innerHTML = "quanitiy: " + cartproduct.quanity;
-			document.getElementById("total-price").innerHTML = "price: " + cartproduct.price;
-			this.cartnumber();
-		}
-	}, {
-		key: "cartnumber",
-		value: function cartnumber() {
-			document.getElementById("cartnum").innerHTML = sessionStorage.length;
-		}
-	}, {
-		key: "carttotal",
-		value: function carttotal() {
-			//console.log(sessionStorage.key[0])
+         if (getSku == null) {
+            sessionStorage.setItem(s, JSON.stringify(p));
+         } else {
+            var oldvalue = JSON.parse(getSku);
+            var newvalue = oldvalue;
+            newvalue.qty += p.qty;
 
+            sessionStorage.setItem(s, JSON.stringify(newvalue));
+         };
 
-		}
-	}]);
+         this.updateCart();
+         this.removecart();
+      }
+   }, {
+      key: 'updateCart',
+      value: function updateCart(s, p) {
+         $(document).on('click', '.addtocart', function () {
 
-	return productutil;
+            var skuincart = "";
+            var item = "";
+            var cartobj = "";
+            var quanityincart = "";
+            var priceincart = "";
+            //empties each time and repopulates the correct quanity and price
+            $('#popup').empty();
+
+            for (var i = 0; i < sessionStorage.length; i++) {
+               skuincart = sessionStorage.key(i);
+               item = sessionStorage.getItem(skuincart);
+               cartobj = JSON.parse(item);
+               quanityincart = parseInt(cartobj.qty);
+               priceincart = cartobj.price * quanityincart;
+
+               var createDiv = $("<div></div>");
+               createDiv.addClass('singleCartItem');
+               var remove = '<button class="remove"> REMOVE </button>';
+               var update = '<button class="update">UPDATE </button>';
+               $('#popup').append(createDiv);
+               createDiv.append('SKU: ' + skuincart + ' QUANITY: ' + quanityincart + ' Total: ' + priceincart + ' ' + remove + ' ' + update);
+            }
+         });
+      }
+   }, {
+      key: 'removecart',
+      value: function removecart(s, p) {
+         $(document).on('click', '.remove', function () {
+            $(this).parent().remove();
+            $(this).sessionStorage.removeItem(".singleCartItem");
+         });
+         this.updateCart();
+      }
+   }, {
+      key: 'cartNum',
+      value: function cartNum() {
+         var cartNum = document.getElementById("cartnum");
+
+         cartnum.innerHTML = sessionStorage.length;
+      }
+   }]);
+
+   return productutil;
 }();
 
 exports.default = productutil;

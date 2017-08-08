@@ -1,61 +1,69 @@
 export default class productutil{
-	constructor(){
-		this.addtocart();
-		this.cartnumber();
-		this.carttotal();
+   constructor(){
+   	this.updateCart();
+   	this.removecart();
 
-	}
-	addtocart(p,s){
-          let item = {
-          	price : p,
-          	quanity :0
-          }
-        let getSku = sessionStorage.getItem(s);
-        let cartproduct = null;
-        //if the add to cart button has NOT been clicked add price and quanity of 1
-          if (getSku == null){
-          	item.price = p;
-          	item.quanity = 1;
+   }
+   addtocart(s,p){
+ 		let getSku = sessionStorage.getItem(s);
+ 		let cartproduct = null;
+    
+    if (getSku ==null){
+       		sessionStorage.setItem(s, JSON.stringify(p));    
+   	} else {
+       let oldvalue = JSON.parse(getSku);
+       let newvalue = oldvalue;
+       newvalue.qty += p.qty;
 
-			}
-		//if button has been clicked add 1 to already exisiting sku
-			else{
-				cartproduct = JSON.parse(getSku);
-			let price= p;
-			item.price = cartproduct.price+ price;
-				//item.price = cartproduct.price;
-          		item.quanity = cartproduct.quanity+1;
-			}
-			//reassign sku and stringify the item. This has to be done after the if statment
-          	getSku = JSON.stringify(item);
-          	//setting the passed sku and parsed getsku and setting them in sessionstorage
-			sessionStorage.setItem(s, getSku);
-         	//getting new information form the new set and parsing that data
-			getSku = sessionStorage.getItem(s);
-			cartproduct = JSON.parse(getSku);
+         sessionStorage.setItem(s, JSON.stringify(newvalue));
+        
 
+   };
+       
+         this.updateCart();
+          this.removecart();
+       }
+updateCart(s, p){
+    $(document).on('click', '.addtocart', function(){
 
-		document.getElementById("sku").innerHTML = (`sku: ${s}`);
-		document.getElementById("quanity").innerHTML = (`quanitiy: ${cartproduct.quanity}`);
-		document.getElementById("total-price").innerHTML = (`price: ${cartproduct.price}`);
-		this.cartnumber();
-	}
-	cartnumber(){
-		document.getElementById("cartnum").innerHTML = sessionStorage.length;
+	let skuincart = "";
+    let item = "";
+    let cartobj ="";
+    let quanityincart ="";
+    let priceincart="";
+    //empties each time and repopulates the correct quanity and price
+   	$('#popup').empty();
 
+        for (let i=0; i<sessionStorage.length; i++) {
+         	skuincart = sessionStorage.key(i);
+         	item = sessionStorage.getItem(skuincart);
+         	cartobj = JSON.parse(item);
+         	quanityincart =  parseInt(cartobj.qty);
+         	priceincart = cartobj.price * quanityincart;
 
-	}
-	carttotal(){
-		//console.log(sessionStorage.key[0])
-		
-	
-	}
-}
+            let createDiv = $("<div></div>");
+         	createDiv.addClass('singleCartItem');
+         let remove =('<button class="remove"> REMOVE </button>')
+         let update = ('<button class="update">UPDATE </button>')
+         $('#popup').append(createDiv);
+         createDiv.append(`SKU: ${skuincart} QUANITY: ${quanityincart} Total: ${priceincart} ${remove} ${update}`);
+            }
 
 
+        });
+        }
+removecart(s,p){
+         $(document).on('click', '.remove', function(){
+         	$(this).parent().remove();
+         	$(this).sessionStorage.removeItem(".singleCartItem");
+})
+         this.updateCart();
+       }
+cartNum(){
+	var cartNum = document.getElementById("cartnum");
 
+         cartnum.innerHTML = sessionStorage.length;
 
-
-
+} }
 
 

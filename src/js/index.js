@@ -9,7 +9,7 @@ export default class App{
 		this.initBBCall();
 		this.eventHandle();
 		this.addtocart();
-		console.log(sessionStorage);
+		console.log(sessionStorage.length);
 	}
 	eventHandle () {
 		$(".category").on('click', (e) => {
@@ -34,21 +34,24 @@ export default class App{
 			console.log(error);
 		});
 	}
-	addtocart(item){
-		$(document).on('click', '.addtocart', function(){
-			
-			//item price & sku
-			let price = $(this).data("price");
-			let productsku = $(this).data("sku");
-				//console.log(price,  productsku);
-			let x= new productutil;
-			x.addtocart(price,  productsku);
-			
-		});
-		
-	}
+	addtocart(){
+       $(document).on('click', '.addtocart', function(){
+                        let sku = $(this).data("sku");
+                        let product = {
+                            price : $(this).data("price"),
+                            qty : 1,
+                        }
 
-}
+           let x= new productutil;
+          	x.addtocart(sku, product);
+          	x.updateCart(sku, product);
+          	x.removecart(sku, product);
+          	x.cartNum();
+       });
+   }
+   	
+    }
+
 let x = new App;
 
 
