@@ -165,6 +165,7 @@ var productutil = function () {
          var cartproduct = null;
 
          if (getSku == null) {
+
             sessionStorage.setItem(s, JSON.stringify(p));
          } else {
             var oldvalue = JSON.parse(getSku);
@@ -195,13 +196,14 @@ var productutil = function () {
                item = sessionStorage.getItem(skuincart);
                cartobj = JSON.parse(item);
                quanityincart = parseInt(cartobj.qty);
-               priceincart = cartobj.price * quanityincart;
+               priceincart = (cartobj.price * quanityincart).toFixed(2);
 
                var createDiv = $("<div></div>");
                createDiv.addClass('singleCartItem');
                var remove = '<button class="remove"> REMOVE </button>';
                var update = '<button class="update">UPDATE </button>';
                $('#popup').append(createDiv);
+
                createDiv.append('SKU: ' + skuincart + ' QUANITY: ' + quanityincart + ' Total: ' + priceincart + ' ' + remove + ' ' + update);
             }
          });
@@ -215,6 +217,9 @@ var productutil = function () {
          });
          this.updateCart();
       }
+   }, {
+      key: 'updateitem',
+      value: function updateitem() {}
    }, {
       key: 'cartNum',
       value: function cartNum() {

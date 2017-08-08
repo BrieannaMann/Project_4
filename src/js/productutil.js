@@ -9,6 +9,7 @@ export default class productutil{
  		let cartproduct = null;
     
     if (getSku ==null){
+    	
        		sessionStorage.setItem(s, JSON.stringify(p));    
    	} else {
        let oldvalue = JSON.parse(getSku);
@@ -39,13 +40,14 @@ updateCart(s, p){
          	item = sessionStorage.getItem(skuincart);
          	cartobj = JSON.parse(item);
          	quanityincart =  parseInt(cartobj.qty);
-         	priceincart = cartobj.price * quanityincart;
+         	priceincart = (cartobj.price * quanityincart).toFixed(2);
 
             let createDiv = $("<div></div>");
          	createDiv.addClass('singleCartItem');
          let remove =('<button class="remove"> REMOVE </button>')
          let update = ('<button class="update">UPDATE </button>')
          $('#popup').append(createDiv);
+
          createDiv.append(`SKU: ${skuincart} QUANITY: ${quanityincart} Total: ${priceincart} ${remove} ${update}`);
             }
 
@@ -59,6 +61,9 @@ removecart(s,p){
 })
          this.updateCart();
        }
+updateitem(){
+
+}
 cartNum(){
 	var cartNum = document.getElementById("cartnum");
 
