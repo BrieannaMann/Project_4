@@ -43,8 +43,9 @@ export default class App{
                         }
 
            let x= new productutil;
+           x.updateCart(sku, product);
           	x.addtocart(sku, product);
-          	x.updateCart(sku, product);
+          	
           	x.removecart(sku, product);
           	x.cartNum();
        });

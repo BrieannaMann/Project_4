@@ -121,8 +121,9 @@ var App = function () {
 				};
 
 				var x = new _productutil2.default();
-				x.addtocart(sku, product);
 				x.updateCart(sku, product);
+				x.addtocart(sku, product);
+
 				x.removecart(sku, product);
 				x.cartNum();
 			});
@@ -143,7 +144,7 @@ $('#mainproduct').click();
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-   value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -151,85 +152,91 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var productutil = function () {
-   function productutil() {
-      _classCallCheck(this, productutil);
+  function productutil() {
+    _classCallCheck(this, productutil);
+
+    this.updateCart();
+    this.removecart();
+  }
+
+  _createClass(productutil, [{
+    key: 'addtocart',
+    value: function addtocart(s, p) {
+      var item = {
+        price: p,
+        quanity: 0
+      };
+      var getSku = sessionStorage.getItem(s);
+      var cartproduct = null;
+
+      if (getSku == null) {
+        item.price = p;
+        item.quanity = 1;
+        sessionStorage.setItem(s, JSON.stringify(p));
+      } else {
+        var oldvalue = JSON.parse(getSku);
+        var newvalue = oldvalue;
+        newvalue.qty += p.qty;
+
+        sessionStorage.setItem(s, JSON.stringify(newvalue));
+      };
 
       this.updateCart();
       this.removecart();
-   }
+    }
+  }, {
+    key: 'updateCart',
+    value: function updateCart(s, p) {
+      $(document).on('click', '.addtocart', function () {
 
-   _createClass(productutil, [{
-      key: 'addtocart',
-      value: function addtocart(s, p) {
-         var getSku = sessionStorage.getItem(s);
-         var cartproduct = null;
+        var skuincart = "";
+        var item = "";
+        var cartobj = "";
+        var quanityincart = "";
+        var priceincart = "";
+        //empties each time and repopulates the correct quanity and price
+        $('#popup').empty();
 
-         if (getSku == null) {
+        for (var i = 0; i < sessionStorage.length; i++) {
+          skuincart = sessionStorage.key(i);
+          item = sessionStorage.getItem(skuincart);
+          cartobj = JSON.parse(item);
+          quanityincart = parseInt(cartobj.qty);
+          priceincart = (cartobj.price * quanityincart).toFixed(2);
 
-            sessionStorage.setItem(s, JSON.stringify(p));
-         } else {
-            var oldvalue = JSON.parse(getSku);
-            var newvalue = oldvalue;
-            newvalue.qty += p.qty;
+          var createDiv = $("<div></div>");
+          createDiv.addClass('cartItem');
+          var remove = '<button class="remove"> REMOVE </button>';
+          var update = '<button class="update">UPDATE </button>';
+          $('#popup').append(createDiv);
 
-            sessionStorage.setItem(s, JSON.stringify(newvalue));
-         };
+          createDiv.append('SKU: ' + skuincart + ' QUANITY: ' + quanityincart + ' Total: ' + priceincart + ' ' + remove + ' ' + update);
+        }
+      });
+    }
+  }, {
+    key: 'removecart',
+    value: function removecart(s) {
+      $(document).on('click', '.remove', function () {
+        $(this).parent().remove();
+        //sessionStorage.clear();
+        sessionStorage.removeItem($(this).parent().remove());
+      });
+      this.updateCart();
+    }
+  }, {
+    key: 'updateitem',
+    value: function updateitem() {}
+  }, {
+    key: 'cartNum',
+    value: function cartNum() {
+      var cartNum = document.getElementById("cartnum");
 
-         this.updateCart();
-         this.removecart();
-      }
-   }, {
-      key: 'updateCart',
-      value: function updateCart(s, p) {
-         $(document).on('click', '.addtocart', function () {
+      cartnum.innerHTML = sessionStorage.length;
+    }
+  }]);
 
-            var skuincart = "";
-            var item = "";
-            var cartobj = "";
-            var quanityincart = "";
-            var priceincart = "";
-            //empties each time and repopulates the correct quanity and price
-            $('#popup').empty();
-
-            for (var i = 0; i < sessionStorage.length; i++) {
-               skuincart = sessionStorage.key(i);
-               item = sessionStorage.getItem(skuincart);
-               cartobj = JSON.parse(item);
-               quanityincart = parseInt(cartobj.qty);
-               priceincart = (cartobj.price * quanityincart).toFixed(2);
-
-               var createDiv = $("<div></div>");
-               createDiv.addClass('singleCartItem');
-               var remove = '<button class="remove"> REMOVE </button>';
-               var update = '<button class="update">UPDATE </button>';
-               $('#popup').append(createDiv);
-
-               createDiv.append('SKU: ' + skuincart + ' QUANITY: ' + quanityincart + ' Total: ' + priceincart + ' ' + remove + ' ' + update);
-            }
-         });
-      }
-   }, {
-      key: 'removecart',
-      value: function removecart(s, p) {
-         $(document).on('click', '.remove', function () {
-            $(this).parent().remove();
-            $(this).sessionStorage.removeItem(".singleCartItem");
-         });
-         this.updateCart();
-      }
-   }, {
-      key: 'updateitem',
-      value: function updateitem() {}
-   }, {
-      key: 'cartNum',
-      value: function cartNum() {
-         var cartNum = document.getElementById("cartnum");
-
-         cartnum.innerHTML = sessionStorage.length;
-      }
-   }]);
-
-   return productutil;
+  return productutil;
 }();
 
 exports.default = productutil;

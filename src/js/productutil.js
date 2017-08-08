@@ -5,11 +5,16 @@ export default class productutil{
 
    }
    addtocart(s,p){
+   	let item = {
+          	price : p,
+          	quanity :0
+          }
  		let getSku = sessionStorage.getItem(s);
  		let cartproduct = null;
     
     if (getSku ==null){
-    	
+    		item.price = p;
+          	item.quanity = 1;
        		sessionStorage.setItem(s, JSON.stringify(p));    
    	} else {
        let oldvalue = JSON.parse(getSku);
@@ -42,22 +47,24 @@ updateCart(s, p){
          	quanityincart =  parseInt(cartobj.qty);
          	priceincart = (cartobj.price * quanityincart).toFixed(2);
 
-            let createDiv = $("<div></div>");
-         	createDiv.addClass('singleCartItem');
-         let remove =('<button class="remove"> REMOVE </button>')
-         let update = ('<button class="update">UPDATE </button>')
-         $('#popup').append(createDiv);
+        let createDiv = $("<div></div>");
+         	createDiv.addClass('cartItem');
+        let remove =('<button class="remove"> REMOVE </button>')
+        let update = ('<button class="update">UPDATE </button>')
+        $('#popup').append(createDiv);
 
-         createDiv.append(`SKU: ${skuincart} QUANITY: ${quanityincart} Total: ${priceincart} ${remove} ${update}`);
+        createDiv.append(`SKU: ${skuincart} QUANITY: ${quanityincart} Total: ${priceincart} ${remove} ${update}`);
             }
 
 
         });
         }
-removecart(s,p){
+removecart(s){
          $(document).on('click', '.remove', function(){
          	$(this).parent().remove();
-         	$(this).sessionStorage.removeItem(".singleCartItem");
+         	//sessionStorage.clear();
+         	sessionStorage.removeItem($(this).parent().remove());
+
 })
          this.updateCart();
        }
